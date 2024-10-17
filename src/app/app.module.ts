@@ -20,8 +20,8 @@ import { PeopleLocalStorageMapping } from './core/repositories/impl/people-mappi
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideHttpClient(),
     
-    { provide: PEOPLE_RESOURCE_NAME_TOKEN, useValue: 'people' },
-    { provide: PEOPLE_API_URL_TOKEN, useValue: 'https://randomuser.me/api/?results=100' },
+    { provide: PEOPLE_RESOURCE_NAME_TOKEN, useValue: 'personas' },
+    { provide: PEOPLE_API_URL_TOKEN, useValue: 'https://localhost:3000/personas' },
     // Registrar los repositorios
     { 
       provide: PEOPLE_REPOSITORY_MAPPING_TOKEN, 
