@@ -4,11 +4,12 @@ import { HttpClient } from '@angular/common/http';
 import { BaseRepositoryHttpService } from './impl/base-repository-http.service';
 import { IBaseRepository } from './intefaces/base-repository.interface';
 import { Person } from '../models/person.model';
-import { PEOPLE_API_URL_TOKEN, PEOPLE_REPOSITORY_MAPPING_TOKEN, PEOPLE_REPOSITORY_TOKEN, PEOPLE_RESOURCE_NAME_TOKEN } from './repository.tokens';
+import { GROUP_REPOSITORY_TOKEN, PEOPLE_API_URL_TOKEN, PEOPLE_REPOSITORY_MAPPING_TOKEN, PEOPLE_REPOSITORY_TOKEN, PEOPLE_RESOURCE_NAME_TOKEN } from './repository.tokens';
 import { BaseRespositoryLocalStorageService } from './impl/base-repository-local-storage.service';
 import { Model } from '../models/base.model';
 import { IBaseMapping } from './intefaces/base-mapping.interface';
 import { JSONServerRepositoryService } from './impl/json-server-repository.service';
+import { Group } from '../models/group.model';
 // Importa otros modelos según sea necesario
 
 export function createHttpRepository<T extends Model>(http: HttpClient, apiUrl: string, resource:string, mapping:IBaseMapping<T>): IBaseRepository<T> {
@@ -30,7 +31,19 @@ export const PeopleRepositoryFactory: FactoryProvider = {
     // Aquí puedes decidir qué implementación usar
     // Por ejemplo, usar Firebase:
     //return createHttpRepository<Person>(http, apiURL);
-    return createLocalStorageRepository<Person>(resource, mapping);
+    return createJSONServerRepository<Person>(http, apiURL, resource, mapping);
+  },
+  deps: [HttpClient, PEOPLE_API_URL_TOKEN, PEOPLE_RESOURCE_NAME_TOKEN, PEOPLE_REPOSITORY_MAPPING_TOKEN]
+};
+
+// Ejemplo de configuración para People
+export const GroupRepositoryFactory: FactoryProvider = {
+  provide: GROUP_REPOSITORY_TOKEN,
+  useFactory: (http: HttpClient, apiURL:string, resource:string, mapping:IBaseMapping<Group>) => {
+    // Aquí puedes decidir qué implementación usar
+    // Por ejemplo, usar Firebase:
+    //return createHttpRepository<Person>(http, apiURL);
+    return createJSONServerRepository<Group>(http, apiURL, resource, mapping);
   },
   deps: [HttpClient, PEOPLE_API_URL_TOKEN, PEOPLE_RESOURCE_NAME_TOKEN, PEOPLE_REPOSITORY_MAPPING_TOKEN]
 };

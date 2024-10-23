@@ -1,9 +1,9 @@
 import { Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { PeopleService } from '../core/services/impl/people.service';
+import { PeopleService } from '../../core/services/impl/people.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AnimationController, InfiniteScrollCustomEvent } from '@ionic/angular';
-import { Paginated } from '../core/models/paginated.model';
-import { Person } from '../core/models/person.model';
+import { Paginated } from '../../core/models/paginated.model';
+import { Person } from '../../core/models/person.model';
 
 @Component({
   selector: 'app-home',
