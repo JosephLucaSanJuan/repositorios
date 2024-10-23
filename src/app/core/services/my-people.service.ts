@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { Paginated } from "../models/paginated.model";
 import { Person } from "../models/person.model";
-import { PaginatedRaw } from "../repositories/impl/people-mapping-http.service";
+import { PaginatedRaw } from "../repositories/impl/json-server-repository.service";
 
 @Injectable({
     providedIn: 'root'

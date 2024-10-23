@@ -13,9 +13,10 @@ import { PEOPLE_API_URL_TOKEN, PEOPLE_REPOSITORY_MAPPING_TOKEN, PEOPLE_RESOURCE_
 import { provideHttpClient } from '@angular/common/http';
 import { PeopleHttpMapping } from './core/repositories/impl/people-mapping-http.service';
 import { PeopleLocalStorageMapping } from './core/repositories/impl/people-mapping-local-storage.service';
+import { ReactiveFormsModule } from '@angular/forms';
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
+  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, ReactiveFormsModule],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideHttpClient(),
