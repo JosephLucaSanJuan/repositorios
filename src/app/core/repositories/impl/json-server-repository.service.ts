@@ -1,20 +1,21 @@
 import { Inject, Injectable } from "@angular/core";
 import { Model } from "../../models/base.model";
 import { IBaseRepository } from "../intefaces/base-repository.interface";
-import { Observable } from "rxjs";
+import { map, Observable } from "rxjs";
 import { Paginated } from "../../models/paginated.model";
 import { HttpClient } from "@angular/common/http";
 import { API_URL_TOKEN, REPOSITORY_MAPPING_TOKEN, RESOURCE_NAME_TOKEN } from "../repository.tokens";
 import { IBaseMapping } from "../intefaces/base-mapping.interface";
 
-export interface PersonRaw {
-    id: string, 
-    nombre: string,
-    apellidos: string,
-    email: string,
-    genero: string,
-    grupoID: string
-}
+export interface PaginatedRaw<T> {
+  first: number
+  prev: number|null
+  next: number|null
+  last: number
+  pages: number
+  items: number
+  data: T[]
+};
 
 @Injectable({
     providedIn: 'root'
@@ -29,7 +30,10 @@ export class JSONServerRepositoryService<T extends Model> implements IBaseReposi
     ){}
 
     getAll(page: number, pageSize: number): Observable<Paginated<T>> {
-        throw new Error("Method not implemented.");
+        return this.http.get<PaginatedRaw<T>>(
+            `${this.apiUrl}/${this.resource}/?_page=${page}&_per_page=${pageSize}`)
+            .pipe(map(res=>this.mappingRepository.getPaginated(page, pageSize, 0, res))
+        );
     }
     getById(id: string): Observable<T | null> {
         throw new Error("Method not implemented.");
