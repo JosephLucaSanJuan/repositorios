@@ -39,4 +39,12 @@ export class GroupMappingJsonServerService implements IBaseMapping<Group> {
     getDeleted(data: any): Group {
         throw new Error('Method not implemented.');
     }
+
+    setAdd(data: Group) {
+        throw new Error('Method not implemented.');
+    }
+    
+    setUpdate(data: any) {
+        throw new Error('Method not implemented.');
+    }
 }

@@ -6,9 +6,10 @@ export interface Person extends Model{
     surname:string,
     age?:number,
     email?:string,
-    gender?:string,
+    gender:string,
     picture?:{
         large:string,
         thumbnail:string
-    }
+    },
+    groupID?:string
 }

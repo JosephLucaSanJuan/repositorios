@@ -10,6 +10,7 @@ import { Person } from 'src/app/core/models/person.model';
 })
 export class PersonModalComponent  implements OnInit {
 
+  genders:string[] = ['Masculino', 'Femenino', 'Otros']
   formGroup:FormGroup
   @Input() person:Person|undefined
   

@@ -10,4 +10,26 @@
       <ion-title size="large">people</ion-title>
     </ion-toolbar>
   </ion-header>
+  
+  <ion-list>
+    <ion-item *ngFor="let person of people$ | async; let i = index" (click)="openPersonDetail(person, i)">
+      <ion-avatar slot="start">
+        <img #avatar alt="Silhouette of a person's head" [src]="person.picture!.thumbnail" />
+      </ion-avatar>
+      <ion-label class="ion-text-nowrap">
+        {{person.name}} {{person.surname}} ({{person.age}} años)
+      </ion-label>
+    </ion-item>
+  </ion-list>
+  <div #animatedAvatarContainer class="animated-avatar-container" [ngStyle]="{'display':isAnimating?'block':'none'}">
+    <img #animatedAvatar [src]="selectedPerson?.picture?.large" alt="Foto de {{ selectedPerson?.name.first }}">
+  </div>
+  <ion-infinite-scroll (ionInfinite)="onIonInfinite($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button (click)="onAddPerson()">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

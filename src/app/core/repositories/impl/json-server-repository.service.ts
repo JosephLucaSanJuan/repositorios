@@ -6,6 +6,7 @@ import { Paginated } from "../../models/paginated.model";
 import { HttpClient } from "@angular/common/http";
 import { API_URL_TOKEN, REPOSITORY_MAPPING_TOKEN, RESOURCE_NAME_TOKEN } from "../repository.tokens";
 import { IBaseMapping } from "../intefaces/base-mapping.interface";
+import { BaseRepositoryHttpService } from "./base-repository-http.service";
 
 export interface PaginatedRaw<T> {
   first: number
@@ -20,31 +21,36 @@ export interface PaginatedRaw<T> {
 @Injectable({
     providedIn: 'root'
 })
-export class JSONServerRepositoryService<T extends Model> implements IBaseRepository<T> {
+export class JSONServerRepositoryService<T extends Model> extends BaseRepositoryHttpService<T> {
 
     constructor(
-        protected http: HttpClient,
-        @Inject(API_URL_TOKEN) protected apiUrl:string,
-        @Inject(RESOURCE_NAME_TOKEN) protected resource: string,
+        protected override http: HttpClient,
+        @Inject(API_URL_TOKEN) protected override apiUrl:string,
+        @Inject(RESOURCE_NAME_TOKEN) protected override resource: string,
         @Inject(REPOSITORY_MAPPING_TOKEN) protected mappingRepository: IBaseMapping<T>
-    ){}
+    ){
+        super(http, apiUrl, resource, mappingRepository)
+    }
 
-    getAll(page: number, pageSize: number): Observable<Paginated<T>> {
+    override getAll(page: number, pageSize: number): Observable<Paginated<T>> {
         return this.http.get<PaginatedRaw<T>>(
             `${this.apiUrl}/${this.resource}/?_page=${page}&_per_page=${pageSize}`)
             .pipe(map(res=>this.mappingRepository.getPaginated(page, pageSize, 0, res))
         );
     }
-    getById(id: string): Observable<T | null> {
+    override getById(id: string): Observable<T | null> {
         throw new Error("Method not implemented.");
     }
-    add(entity: T): Observable<T> {
+    override add(entity: T): Observable<T> {
+        return this.http.get<T>(
+            `${this.apiUrl}/${this.resource}`, this.mappingRepository.setAdd(entity))
+            .pipe(map(res=>this.mappingRepository.getAdded(res))
+        );
+    }
+    override update(id: string, entity: T): Observable<T> {
         throw new Error("Method not implemented.");
     }
-    update(id: string, entity: T): Observable<T> {
-        throw new Error("Method not implemented.");
-    }
-    delete(id: string): Observable<T> {
+    override delete(id: string): Observable<T> {
         throw new Error("Method not implemented.");
     }
 
