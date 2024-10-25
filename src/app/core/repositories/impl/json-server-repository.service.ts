@@ -32,24 +32,40 @@ export class JSONServerRepositoryService<T extends Model> extends BaseRepository
         super(http, apiUrl, resource, mappingRepository)
     }
 
-    override getAll(page: number, pageSize: number): Observable<Paginated<T>> {
-        return this.http.get<PaginatedRaw<T>>(
-            `${this.apiUrl}/${this.resource}/?_page=${page}&_per_page=${pageSize}`)
-            .pipe(map(res=>this.mappingRepository.getPaginated(page, pageSize, 0, res))
-        );
+    override getAll(page: number, pageSize: number): Observable<Paginated<T>|T[]> {
+        if (page!=-1) {
+            return this.http.get<PaginatedRaw<T>>(
+                `${this.apiUrl}/${this.resource}/?_page=${page}&_per_page=${pageSize}`)
+                .pipe(map(res=>this.mappingRepository.getPaginated(page, pageSize, res.pages, res.data))
+            );
+        } else {
+            return this.http.get<T[]>(
+                `${this.apiUrl}/${this.resource}/?_page=${page}&_per_page=${pageSize}`)
+                .pipe(map(res=>res.map((element:any)=>
+                    this.mappingRepository.getOne(element)
+                ))
+            );
+        }
     }
+
     override getById(id: string): Observable<T | null> {
         throw new Error("Method not implemented.");
     }
+
     override add(entity: T): Observable<T> {
-        return this.http.get<T>(
+        return this.http.post<T>(
             `${this.apiUrl}/${this.resource}`, this.mappingRepository.setAdd(entity))
             .pipe(map(res=>this.mappingRepository.getAdded(res))
         );
     }
+
     override update(id: string, entity: T): Observable<T> {
-        throw new Error("Method not implemented.");
+        return this.http.patch<T>(
+            `${this.apiUrl}/${this.resource}/${id}`, this.mappingRepository.setUpdate(entity))
+            .pipe(map(res=>this.mappingRepository.getUpdated(res))
+        );
     }
+
     override delete(id: string): Observable<T> {
         throw new Error("Method not implemented.");
     }

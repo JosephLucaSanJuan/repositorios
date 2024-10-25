@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { Group } from 'src/app/core/models/group.model';
 import { Person } from 'src/app/core/models/person.model';
 
 @Component({
@@ -12,7 +14,26 @@ export class PersonModalComponent  implements OnInit {
 
   genders:string[] = ['Masculino', 'Femenino', 'Otros']
   formGroup:FormGroup
-  @Input() person:Person|undefined
+  mode:'new'|'edit' = 'new'
+
+  private _groups:BehaviorSubject<Group[]> = new BehaviorSubject<Group[]>([])
+  public groups$:Observable<Group[]> = this._groups.asObservable()
+
+  @Input() set person(_person:Person){
+    if (_person && _person.id)
+      this.mode = 'edit'
+
+    this.formGroup.controls['name'].setValue(_person.name)
+    this.formGroup.controls['surname'].setValue(_person.surname)
+    this.formGroup.controls['age'].setValue(_person.age)
+    this.formGroup.controls['email'].setValue(_person.email)
+    this.formGroup.controls['gender'].setValue(_person.gender)
+    this.formGroup.controls['groupID'].setValue(_person.groupID)
+  }
+
+  @Input() set group(_group:Group[]){
+    this._groups.next(_group)
+  }
   
   constructor(
     private fb:FormBuilder,
@@ -21,9 +42,10 @@ export class PersonModalComponent  implements OnInit {
     this.formGroup = this.fb.group({
       name:['', [Validators.required, Validators.minLength(2)]],
       surname:['', [Validators.required, Validators.minLength(2)]],
-      email:['', [Validators.required, Validators.minLength(2)]],
+      email:['', [Validators.required, Validators.email]],
       gender:['', [Validators.required]],
-      age:['', [Validators.pattern("/\d/g")]]
+      age:['', [Validators.pattern("/\d/g")]],
+      groupID:[null, Validators.required]
     })
   }
 

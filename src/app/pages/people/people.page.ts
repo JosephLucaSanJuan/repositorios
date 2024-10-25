@@ -1,9 +1,11 @@
 import { Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { AnimationController, InfiniteScrollCustomEvent, ModalController } from '@ionic/angular';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, lastValueFrom } from 'rxjs';
 import { PersonModalComponent } from 'src/app/components/person-modal/person-modal.component';
+import { Group } from 'src/app/core/models/group.model';
 import { Paginated } from 'src/app/core/models/paginated.model';
 import { Person } from 'src/app/core/models/person.model';
+import { GroupService } from 'src/app/core/services/impl/groups.service';
 import { PeopleService } from 'src/app/core/services/impl/people.service';
 
 @Component({
@@ -19,10 +21,12 @@ export class PeoplePage implements OnInit {
   constructor(
     private animationCtrl: AnimationController,
     private modalCtrl: ModalController,
+    private groupSVC: GroupService,
     private peopleSVC: PeopleService
   ) { }
 
   ngOnInit() {
+    this.getMorePeople()
   }
 
   @ViewChildren('avatar') avatars!: QueryList<ElementRef>
@@ -33,6 +37,16 @@ export class PeoplePage implements OnInit {
   isAnimating = false
   page:number = 1
   pageSize:number = 25
+
+  refresh(){
+    this.page=1;
+    this.peopleSVC.getAll(this.page, this.pageSize).subscribe({
+      next:(response:Paginated<Person>)=>{
+        this._people.next([...response.data])
+        this.page++
+      }
+    })
+  }
 
   getMorePeople(notify:HTMLIonInfiniteScrollElement|null = null){
     this.peopleSVC.getAll(this.page, this.pageSize).subscribe({
@@ -46,26 +60,55 @@ export class PeoplePage implements OnInit {
 
   async openPersonDetail(person:any, index:number){
     this.selectedPerson = person
-    const avatarElements = this.avatars.toArray()
+    /*const avatarElements = this.avatars.toArray()
     const clickedAvatar = avatarElements[index].nativeElement
 
     const avatarRect = clickedAvatar.getBoundingClientRect()
-    this.isAnimating = true
+    this.isAnimating = true*/
   }
 
   onIonInfinite(ev:InfiniteScrollCustomEvent){
     this.getMorePeople(ev.target)
   }
 
-  async onAddPerson(){
+  private async presentModalPerson(mode:'new'|'edit', person:Person|undefined=undefined){
+    let _groups:Group[] = await lastValueFrom(this.groupSVC.getAll())
     const modal = await this.modalCtrl.create({
       component:PersonModalComponent,
-      componentProps:{}
+      componentProps:(mode=='edit'?{
+        person:person,
+        groups:_groups
+      }:{
+        groups:_groups
+      })
     })
     modal.onDidDismiss().then((res:any)=>{
-      console.log(res)
+      switch (res.role) {
+        case 'new':
+          this.peopleSVC.add(res.data).subscribe({
+            next:res=>{
+              this.refresh()
+            },
+            error:err=>{}
+          })
+          break;
+        case 'edit':
+          this.peopleSVC.update(person!.id, res.data).subscribe({
+            next:res=>{
+              this.refresh()
+            },
+            error:err=>{}
+          })
+          break;
+        default:
+          break;
+      }
     })
     await modal.present()
+  }
+
+  async onAddPerson(){
+    await this.presentModalPerson('new')
   }
 
 }

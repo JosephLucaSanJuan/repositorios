@@ -22,6 +22,7 @@ export class GroupsPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.getMoreGroups()
   }
 
   @ViewChildren('avatar') avatars!: QueryList<ElementRef>
@@ -48,8 +49,29 @@ export class GroupsPage implements OnInit {
     const avatarElements = this.avatars.toArray()
     const clickedAvatar = avatarElements[index].nativeElement
 
+    // Obtener las coordenadas del avatar clicado
     const avatarRect = clickedAvatar.getBoundingClientRect()
+
+    // Mostrar el contenedor animado
     this.isAnimating = true
+
+    // Configurar la posición inicial de la imagen animada
+    const animatedAvatarElement = this.animatedAvatar.nativeElement as HTMLElement;
+    animatedAvatarElement.style.position = 'absolute';
+    animatedAvatarElement.style.top = `${avatarRect.top}px`;
+    animatedAvatarElement.style.left = `${avatarRect.left}px`;
+    animatedAvatarElement.style.width = `${avatarRect.width}px`;
+    animatedAvatarElement.style.height = `${avatarRect.height}px`;
+
+    // Crear la animación
+    const animation = this.animationCtrl.create()
+      .addElement(animatedAvatarElement)
+      .duration(500)
+      .easing('ease-out')
+      .fromTo('transform', 'translate(0, 0) scale(1)', `translate(${window.innerWidth / 2 - avatarRect.left - avatarRect.width / 2}px, ${window.innerHeight / 2 - avatarRect.top - avatarRect.height / 2}px) scale(5)`);
+
+    // Iniciar la animación
+    await animation.play();
   }
 
   onIonInfinite(ev:InfiniteScrollCustomEvent){

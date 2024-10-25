@@ -35,8 +35,8 @@ export class PeopleHttpMapping implements IBaseMapping<Person> {
             apellidos:data.surname, 
             edad:data.age?.toString()??'',
             email:data.email??'',
-            grupoID:'',
             genero:this.toGenderMapping[data.gender],
+            grupoID:data.groupID??'',
         };
     }
 
@@ -59,7 +59,7 @@ export class PeopleHttpMapping implements IBaseMapping<Person> {
                 case 'gender':
                     toReturn['genero']=data[key]
                     break;
-                case 'name':
+                case 'groupID':
                     toReturn['grupoID']=data[key]
                     break;
                 default:
