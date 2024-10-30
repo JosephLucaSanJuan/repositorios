@@ -59,6 +59,7 @@ export class PeoplePage implements OnInit {
   }
 
   async openPersonDetail(person:any, index:number){
+    await this.presentModalPerson('edit', person)
     this.selectedPerson = person
     /*const avatarElements = this.avatars.toArray()
     const clickedAvatar = avatarElements[index].nativeElement
@@ -109,6 +110,17 @@ export class PeoplePage implements OnInit {
 
   async onAddPerson(){
     await this.presentModalPerson('new')
+  }
+
+  onDeletePerson(event:CustomEvent, person:Person){
+    if (event.detail.role == 'yes'){
+      this.peopleSVC.delete(person.id).subscribe({
+        next:response=>{
+          this.refresh()
+        },
+        error:err=>{}
+      })
+    }
   }
 
 }

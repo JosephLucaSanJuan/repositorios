@@ -19,6 +19,15 @@
       <ion-label class="ion-text-nowrap">
         {{person.name}} {{person.surname}} ({{person.age}} años)
       </ion-label>
+      <ion-button (click)="$event.stopPropagation()" [id]="'button-delete-'+person.id" slot="end" color="danger" fill="clear">
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-button>
+      <ion-alert
+        [trigger]="'button-delete-'+person.id"
+        header="Alert!"
+        [buttons]="alertYesNoButtons"
+        (didDismiss)="onDeletePerson($event, person)"
+      ></ion-alert>
     </ion-item>
   </ion-list>
   <div #animatedAvatarContainer class="animated-avatar-container" [ngStyle]="{'display':isAnimating?'block':'none'}">
