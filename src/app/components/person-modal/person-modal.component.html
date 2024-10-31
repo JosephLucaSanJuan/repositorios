@@ -36,6 +36,14 @@
       <p *ngIf="email?.errors?.['email']">Por favor, introduce un email válido.</p>
     </ion-text>
 
+    <!-- Edad -->
+    <ion-item>
+      <ion-input label="Edad" label-placement="stacked" type="text" formControlName="age"></ion-input>
+    </ion-item>
+    <ion-text color="danger" *ngIf="age?.invalid">
+      <p *ngIf="age?.errors?.['patern']">La edad debe ser un número positivo.</p>
+    </ion-text>
+
     <!-- Género -->
     <ion-item>
       <ion-label>Género</ion-label>

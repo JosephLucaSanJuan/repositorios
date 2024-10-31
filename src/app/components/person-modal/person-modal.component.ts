@@ -71,11 +71,26 @@ export class PersonModalComponent  implements OnInit {
     return this.formGroup.controls['gender']
   }
 
+  getDirtyValues(formGroup:FormGroup):any {
+    const dirtyValues:any = {}
+    Object.keys(formGroup.controls).forEach(key=>{
+      const control = formGroup.get(key);
+      if (control?.dirty) {
+        dirtyValues[key] = control.value
+      }
+    })
+    return dirtyValues
+  }
+
   onSubmit(){
     if (this.formGroup.valid) {
       console.log('Formulario enviado:', this.formGroup.value);
       // Pasar los datos al cerrar el modal
-      this.modalCtrl.dismiss(this.formGroup.value);
+      this.modalCtrl.dismiss(
+        (this.mode == 'new'?
+         this.formGroup.value:
+         this.getDirtyValues(this.formGroup)), this.mode
+      );
     } else {
       console.log('Formulario inválido');
     }
