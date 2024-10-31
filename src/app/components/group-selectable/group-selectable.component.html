@@ -1,4 +1,4 @@
-<ion-item>
+<!--ion-item>
   <ion-select
     label="Grupo" placeholder="Seleccione grupo"
     [value]="selectedGroup"
@@ -11,4 +11,49 @@
       {{ group.name }}
     </ion-select-option>
   </ion-select>
-</ion-item>
+</ion-item-->
+<div id="popoverButton" popoverButton>
+  <div style="display: flex;" class="ion-justify-content-between ion-align-items-center">
+    <div style="display: flex;" class="ion-justify-content-start ion-align-items-center">
+      <ion-text *ngIf="!selectedGroup && !disabled">Seleccione un grupo</ion-text>
+      <ion-text *ngIf="!selectedGroup && !disabled">Ninguno</ion-text>
+      <ion-avatar class="ion-margin-end" slot="start" *ngIf="selectedGroup">
+        <ion-img *ngIf="selectedGroup.picture" [src]="selectedGroup.picture"></ion-img>
+        <img *ngIf="!selectedGroup?.picture" src="https://ionicframework.com/docs/img/demos/avatar.svg" alt="">
+      </ion-avatar>
+      <ion-text *ngIf="selectedGroup">{{selectedGroup.name}}</ion-text>
+    </div>
+    <ion-icon name="chevron-down-outline" color="medium"></ion-icon>
+  </div>
+  <ion-popover class="selectable-popover" style="width: 100%;" *ngIf="!disabled" trigger="popover-button" #popover (villPresent)="onLoadsGroups()">
+    <ng-template>
+      <ion-content class="popover-content">
+        <ion-list class="list-scrollable">
+          <div class="fixed-search">
+            <ion-item>
+              <iont-input #search placeholder="Buscar" type="text" (ionInput)="onFilter($event)" debounce="200"></iont-input>
+              <ion-button color="medium" slot="end" fill="clear" (click)="clearSearch(search)">
+                <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+          </div>
+          <div class="scrollable-content">
+            <ion-item button (click)="deselect(popover)">
+              <ion-avatar slot="start"><img src="https://ionicframework.com/docs/img/demos/avatar.svg" alt=""></ion-avatar>
+            </ion-item>
+            <ion-item *ngFor="let group of groups$|async" button (click)="onGroupClicked(popover, group)">
+              <ion-avatar slot="start">
+                <ion-img *ngIf="group.picture" [src]="group.picture"></ion-img>
+                <img *ngIf="!group.picture" src="https://ionicframework.com/docs/img/demos/avatar.svg" alt="">
+              </ion-avatar>
+              <ion-text>{{group.name}}</ion-text>
+            </ion-item>
+            <ion-infinite-scroll (ionInfinite)="onMoreGroups($event)">
+              <ion-infinite-scroll-content></ion-infinite-scroll-content>
+            </ion-infinite-scroll>
+          </div>
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-popover>
+</div>
