@@ -3,7 +3,7 @@ import { AnimationController, InfiniteScrollCustomEvent, ModalController } from 
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Group } from 'src/app/core/models/group.model';
 import { Paginated } from 'src/app/core/models/paginated.model';
-import { PeopleService } from 'src/app/core/services/impl/people.service';
+import { GroupService } from 'src/app/core/services/impl/groups.service';
 
 @Component({
   selector: 'app-groups',
@@ -18,7 +18,7 @@ export class GroupsPage implements OnInit {
   constructor(
     private animationCtrl: AnimationController,
     private modalCtrl: ModalController,
-    private peopleSVC: PeopleService
+    private groupsSVC: GroupService
   ) { }
 
   ngOnInit() {
@@ -35,7 +35,7 @@ export class GroupsPage implements OnInit {
   pageSize:number = 25
 
   getMoreGroups(notify:HTMLIonInfiniteScrollElement|null = null){
-    this.peopleSVC.getAll(this.page, this.pageSize).subscribe({
+    this.groupsSVC.getAll(this.page, this.pageSize).subscribe({
       next:(response:Paginated<Group>)=>{
         this._groups.next([...response.data]);
         this.page++
