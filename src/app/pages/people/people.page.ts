@@ -18,6 +18,17 @@ export class PeoplePage implements OnInit {
   _people:BehaviorSubject<Person[]> = new BehaviorSubject<Person[]>([])
   people$:Observable<Person[]> = this._people.asObservable()
 
+  public alertYesNoButtons = [
+    {
+      text: 'No',
+      role: 'no'
+    },
+    {
+      text: 'Yes',
+      role: 'yes'
+    }
+  ]
+
   constructor(
     private animationCtrl: AnimationController,
     private modalCtrl: ModalController,
@@ -26,7 +37,7 @@ export class PeoplePage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getMorePeople()
+    this.refresh()
   }
 
   @ViewChildren('avatar') avatars!: QueryList<ElementRef>
@@ -37,6 +48,7 @@ export class PeoplePage implements OnInit {
   isAnimating = false
   page:number = 1
   pageSize:number = 25
+  pages:number = 0
 
   refresh(){
     this.page=1;
@@ -44,6 +56,7 @@ export class PeoplePage implements OnInit {
       next:(response:Paginated<Person>)=>{
         this._people.next([...response.data])
         this.page++
+        this.pages = response.pages
       }
     })
   }

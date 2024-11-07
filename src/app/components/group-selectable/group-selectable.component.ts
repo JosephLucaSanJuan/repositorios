@@ -39,6 +39,14 @@ export class GroupSelectableComponent implements OnInit, ControlValueAccessor {
 
   constructor(public groupSVC:GroupService) { }
 
+  ngOnDestroy():void{
+    this.popover?.dismiss()
+  }
+
+  onLoadGroups() {
+    this.loadGroups("")
+  }
+
   private async loadGroups(filter:String){
     this.page=1;
     this.groupSVC.getAll(this.page, this.pageSize).subscribe({

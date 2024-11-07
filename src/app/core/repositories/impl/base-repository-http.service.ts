@@ -2,7 +2,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
-import { IBaseRepository } from '../intefaces/base-repository.interface';
+import { IBaseRepository, SearchParams } from '../intefaces/base-repository.interface';
 import { API_URL_TOKEN, REPOSITORY_MAPPING_TOKEN, RESOURCE_NAME_TOKEN } from '../repository.tokens';
 import { Model } from '../../models/base.model';
 import { IBaseMapping } from '../intefaces/base-mapping.interface';
@@ -23,7 +23,7 @@ export class BaseRepositoryHttpService<T extends Model> implements IBaseReposito
     this.apiUrl = apiUrl;
   }
 
-  getAll(page:number, pageSize:number): Observable<Paginated<T>|T[]> {
+  getAll(page:number, pageSize:number, filters:SearchParams): Observable<Paginated<T>|T[]> {
     return this.http.get<T[]>(`${this.apiUrl}/${this.resource}`).pipe(map(res=>this.mapping.getPaginated(page, pageSize, 0, res)));
   }
 
