@@ -10,6 +10,7 @@ import { Model } from '../models/base.model';
 import { IBaseMapping } from './intefaces/base-mapping.interface';
 import { JSONServerRepositoryService } from './impl/json-server-repository.service';
 import { Group } from '../models/group.model';
+import { StrapiRepositoryService } from './impl/strapi-repository.service';
 // Importa otros modelos según sea necesario
 
 export function createHttpRepository<T extends Model>(http: HttpClient, apiUrl: string, resource:string, mapping:IBaseMapping<T>): IBaseRepository<T> {
@@ -24,6 +25,10 @@ export function createJSONServerRepository<T extends Model>(http: HttpClient, ap
   return new JSONServerRepositoryService<T>(http, apiUrl, resource, mapping)
 }
 
+export function createStrapiRepository<T extends Model>(http: HttpClient, apiUrl: string, resource: string, mapping: IBaseMapping<T>): IBaseRepository<T> {
+  return new StrapiRepositoryService<T>(http, apiUrl, resource, mapping)
+}
+
 // Ejemplo de configuración para People
 export const PeopleRepositoryFactory: FactoryProvider = {
   provide: PEOPLE_REPOSITORY_TOKEN,
@@ -31,7 +36,7 @@ export const PeopleRepositoryFactory: FactoryProvider = {
     // Aquí puedes decidir qué implementación usar
     // Por ejemplo, usar Firebase:
     //return createHttpRepository<Person>(http, apiURL);
-    return createJSONServerRepository<Person>(http, apiURL, resource, mapping);
+    return createStrapiRepository<Person>(http, apiURL, resource, mapping);
   },
   deps: [HttpClient, PEOPLE_API_URL_TOKEN, PEOPLE_RESOURCE_NAME_TOKEN, PEOPLE_REPOSITORY_MAPPING_TOKEN]
 };
@@ -43,7 +48,7 @@ export const GroupRepositoryFactory: FactoryProvider = {
     // Aquí puedes decidir qué implementación usar
     // Por ejemplo, usar Firebase:
     //return createHttpRepository<Person>(http, apiURL);
-    return createJSONServerRepository<Group>(http, apiURL, resource, mapping);
+    return createStrapiRepository<Group>(http, apiURL, resource, mapping);
   },
   deps: [HttpClient, PEOPLE_API_URL_TOKEN, PEOPLE_RESOURCE_NAME_TOKEN, PEOPLE_REPOSITORY_MAPPING_TOKEN]
 };

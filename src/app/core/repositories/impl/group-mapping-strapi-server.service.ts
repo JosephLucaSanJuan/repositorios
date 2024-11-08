@@ -5,14 +5,14 @@ import { Paginated } from "../../models/paginated.model";
 
 export interface GroupRaw{
     data:Data,
-    nametame:Meta
+    meta:Meta
 }
 
 export interface GroupAttributes {
     name: string
-    createdAt:string
-    updatedAt:string
-    publishedAt:string
+    createdAt?:string
+    updatedAt?:string
+    publishedAt?:string
 }
 
 export interface Data {
@@ -33,7 +33,7 @@ export class GroupMappingStrapiServer implements IBaseMapping<Group>{
 
     setAdd(data: Group):GroupData {
         return {
-            data:{
+            attributes:{
                 name:data.name
             }
         };
@@ -41,7 +41,7 @@ export class GroupMappingStrapiServer implements IBaseMapping<Group>{
 
     setUpdate(data: any):GroupData {
         let toReturn:GroupData = {
-            data:{
+            attributes:{
                 name:""
             }
         };

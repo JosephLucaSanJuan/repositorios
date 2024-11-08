@@ -18,6 +18,8 @@ import { GroupService } from './core/services/impl/groups.service';
 import { GroupMappingJsonServerService } from './core/repositories/impl/group-mapping-json-server.service';
 import { PersonModalComponent } from './components/person-modal/person-modal.component';
 import { GroupSelectableComponent } from './components/group-selectable/group-selectable.component';
+import { GroupMappingStrapiServer } from './core/repositories/impl/group-mapping-strapi-server.service';
+import { PeopleStrapiMappingService } from './core/repositories/impl/people-mapping-strapi.service';
 @NgModule({
   declarations: [AppComponent, PersonModalComponent, GroupSelectableComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, ReactiveFormsModule],
@@ -27,16 +29,16 @@ import { GroupSelectableComponent } from './components/group-selectable/group-se
     
     { provide: PEOPLE_RESOURCE_NAME_TOKEN, useValue: 'personas' },
     { provide: GROUP_RESOURCE_NAME_TOKEN, useValue: 'grupos' },
-    { provide: PEOPLE_API_URL_TOKEN, useValue: 'https://localhost:3000/personas' },
-    { provide: GROUP_API_URL_TOKEN, useValue: 'https://localhost:3000/grupos' },
+    { provide: PEOPLE_API_URL_TOKEN, useValue: 'https://localhost:1337/api/personas' },
+    { provide: GROUP_API_URL_TOKEN, useValue: 'https://localhost:1337/api/grupos' },
     // Registrar los repositorios
     { 
       provide: PEOPLE_REPOSITORY_MAPPING_TOKEN, 
-      useClass: PeopleLocalStorageMapping
+      useClass: PeopleStrapiMappingService//PeopleLocalStorageMapping
     },
     {
       provide: GROUP_REPOSITORY_MAPPING_TOKEN,
-      useClass: GroupMappingJsonServerService
+      useClass: GroupMappingStrapiServer//GroupMappingJsonServerService
     },
     PeopleRepositoryFactory,
     GroupRepositoryFactory,

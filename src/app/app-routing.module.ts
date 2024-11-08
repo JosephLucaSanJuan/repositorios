@@ -24,6 +24,19 @@ const routes: Routes = [
     path: 'people',
     loadChildren: () => import('./pages/people/people.module').then( m => PeoplePageModule)
   },
+  {
+    path: 'splash',
+    loadChildren: () => import('./pages/splash/splash.module').then( m => m.SplashPageModule)
+  },
+  {
+    path: 'register',
+    loadChildren: () => import('./pages/register/register.module').then( m => m.RegisterPageModule)
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
+  }
+
 
 ];
 
