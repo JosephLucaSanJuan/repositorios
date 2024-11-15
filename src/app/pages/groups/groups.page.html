@@ -12,7 +12,7 @@
   </ion-header>
   
   <ion-list>
-    <ion-item *ngFor="let person of people$ | async; let i = index" (click)="openPersonDetail(person, i)">
+    <ion-item *ngFor="let group of groups$ | async; let i = index" (click)="openGroupDetail(group, i)">
       <ion-label class="ion-text-nowrap">
         {{group.name}}
       </ion-label>

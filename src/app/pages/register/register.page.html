@@ -10,4 +10,23 @@
       <ion-title size="large">register</ion-title>
     </ion-toolbar>
   </ion-header>
+  
+  <!--form [formGroup]="userRegister" (ngSubmit)="onSubmit()"-->
+    <ion-item>
+      <ion-input label="Nombre de Usuario" labelPlacement="stacked" type="text" formControlName="username"></ion-input>
+    </ion-item>
+    <ion-text></ion-text>
+    <ion-item>
+      <ion-input label="Email" labelPlacement="stacked" type="email" formControlName="email"></ion-input>
+    </ion-item>
+    <ion-text color="danger" *ngIf="email?.invalid && (email?.dirty || email?.touched)"></ion-text>
+    <ion-item>
+      <ion-input label="Contraseña" labelPlacement="stacked" type="text" formControlName="password"></ion-input>
+    </ion-item>
+    <ion-text></ion-text>
+    <ion-item>
+      <ion-input label="Confirmar Contraseña" labelPlacement="stacked" type="text" formControlName="password"></ion-input>
+    </ion-item>
+    <ion-text></ion-text>
+  <!--/form-->
 </ion-content>

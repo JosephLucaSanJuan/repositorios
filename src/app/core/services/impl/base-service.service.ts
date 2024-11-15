@@ -2,7 +2,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { IBaseService } from '../interfaces/base-service.interface';
-import { IBaseRepository } from '../../repositories/intefaces/base-repository.interface';
+import { IBaseRepository, SearchParams } from '../../repositories/intefaces/base-repository.interface';
 import { Model } from '../../models/base.model';
 import { Paginated } from '../../models/paginated.model';
 import { REPOSITORY_TOKEN } from '../../repositories/repository.tokens';
@@ -19,8 +19,8 @@ export class BaseService<T extends Model> implements IBaseService<T> {
 
   getAll(page:number, pageSize:number):Observable<Paginated<T>>
 
-  getAll(page:number = -1, pageSize:number = 25): Observable<Paginated<T>|T[]> {
-    return this.repository.getAll(page, pageSize);
+  getAll(page:number = -1, pageSize:number = 25, filter:SearchParams={}): Observable<Paginated<T>|T[]> {
+    return this.repository.getAll(page, pageSize, filter);
   }
 
   getById(id: string): Observable<T | null> {

@@ -1,6 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>login</ion-title>
+    <ion-title>Iniciar Sesión</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -12,13 +12,14 @@
   </ion-header>
   
   <div class="#container">
-    <form action="">
+    <!--form [formGroup]="form" (ngSubmit)="onSubmit()"-->
       <ion-item>
         <ion-input label="Email" labelPlacement="stacked" type="email" formControlName="email"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-input label="Password" labelPlacement="stacked" type="text" formControlName="password"></ion-input>
+        <ion-input label="Contraseña" labelPlacement="stacked" type="text" formControlName="password"></ion-input>
       </ion-item>
-    </form>
+      <ion-button expand="full" type="submit">Inicia Sesión</ion-button>
+    <!--/form-->
   </div>
 </ion-content>
