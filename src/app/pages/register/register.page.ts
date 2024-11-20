@@ -1,7 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from 'src/app/core/models/user.model';
+import { BaseAuthenticationService } from 'src/app/core/services/impl/base-authentication.service';
+import { passwordValidator } from 'src/app/core/utils/validators';
 
 @Component({
   selector: 'app-register',
@@ -12,22 +15,24 @@ export class RegisterPage implements OnInit {
 
   userRegister: FormGroup
 
-  private _users:BehaviorSubject<User[]> = new BehaviorSubject<User[]>([])
-  public users$:Observable<User[]> = this._users.asObservable()
-
-  @Input() set user(_user:User) {
-    this.userRegister.controls['email'].setValue(_user.email)
+  /*@Input() set user(_user:User) {
+    //this.userRegister.controls['email'].setValue(_user.email)
     this.userRegister.controls['username'].setValue(_user.username)
-    this.userRegister.controls['password'].setValue(_user.password)
-  }
+    //this.userRegister.controls['password'].setValue(_user.password)
+  }*/
 
   constructor(
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute,
+    private authSVC: BaseAuthenticationService
   ) { 
     this.userRegister = this.fb.group({
+      name:['', Validators.required, Validators.minLength(2)],
+      surname:['', Validators.required, Validators.minLength(2)],
       email:['', [Validators.required, Validators.email]],
-      username:['', Validators.required, Validators.minLength(2)],
-      password:['', Validators.required, Validators.minLength(6)]
+      password:['', Validators.required, passwordValidator],
+      confirmPassword:['', Validators.required]
     })
   }
 
@@ -38,12 +43,20 @@ export class RegisterPage implements OnInit {
     return this.userRegister.controls['email']
   }
 
-  get username() {
-    return this.userRegister.controls['username']
+  get name() {
+    return this.userRegister.controls['name']
+  }
+
+  get surname() {
+    return this.userRegister.controls['surname']
   }
 
   get password() {
     return this.userRegister.controls['password']
+  }
+
+  get confirmPassword() {
+    return this.userRegister.controls['confirmPassword']
   }
 
   getDirtyValues(formGroup:FormGroup):any {
@@ -59,10 +72,24 @@ export class RegisterPage implements OnInit {
 
   onSubmit(){
     if (this.userRegister.valid) {
-      console.log('Usuario registrado')
+      this.authSVC.sigIn(this.userRegister.value).subscribe({
+        next:resp=>{
+          const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home'
+          this.router.navigateByUrl(returnUrl)
+        },
+        error:err=>{
+          console.log(err)
+        }
+      })
     } else {
-      console.log('Usuario registrado')
+      console.log('Formulario inválido')
     }
+  }
+
+  onLogin(){
+    this.userRegister.reset()
+    const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home'
+    this.router.navigate(['/login'], {queryParams:returnUrl, replaceUrl:true})
   }
 
 }

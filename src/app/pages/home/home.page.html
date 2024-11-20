@@ -1,7 +1,10 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
     <ion-title>
-      Blank
+      Inicio
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -13,7 +16,7 @@
     </ion-toolbar>
   </ion-header>
   
-  <ion-list>
+  <!--ion-list>
     <ion-item *ngFor="let person of people$ | async; let i = index" (click)="openPersonDetail(person, i)">
       <ion-avatar slot="start">
         <img #avatar alt="Silhouette of a person's head" [src]="person.picture?.thumbnail" />
@@ -28,7 +31,7 @@
   </div>
   <ion-infinite-scroll (ionInfinite)="onIonInfinite($event)">
     <ion-infinite-scroll-content></ion-infinite-scroll-content>
-  </ion-infinite-scroll>
+  </ion-infinite-scroll-->
   
 </ion-content>
 

@@ -7,9 +7,9 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { GroupRepositoryFactory, PeopleRepositoryFactory } from './core/repositories/repository.factory';
+import { AuthMappingFactory, GroupRepositoryFactory, GroupsMappingFactory, PeopleMappingFactory, PeopleRepositoryFactory } from './core/repositories/repository.factory';
 import { PeopleService } from './core/services/impl/people.service';
-import { GROUP_API_URL_TOKEN, GROUP_REPOSITORY_MAPPING_TOKEN, GROUP_RESOURCE_NAME_TOKEN, PEOPLE_API_URL_TOKEN, PEOPLE_REPOSITORY_MAPPING_TOKEN, PEOPLE_RESOURCE_NAME_TOKEN } from './core/repositories/repository.tokens';
+import { AUTH_ME_API_URL_TOKEN, AUTH_SIGN_IN_API_URL_TOKEN, AUTH_SIGN_UP_API_URL_TOKEN, BACKEND_TOKEN, GROUP_API_URL_TOKEN, GROUP_REPOSITORY_MAPPING_TOKEN, GROUP_RESOURCE_NAME_TOKEN, PEOPLE_API_URL_TOKEN, PEOPLE_REPOSITORY_MAPPING_TOKEN, PEOPLE_RESOURCE_NAME_TOKEN } from './core/repositories/repository.tokens';
 import { provideHttpClient } from '@angular/common/http';
 import { PeopleHttpMapping } from './core/repositories/impl/people-mapping-http.service';
 import { PeopleLocalStorageMapping } from './core/repositories/impl/people-mapping-local-storage.service';
@@ -26,20 +26,26 @@ import { PeopleStrapiMappingService } from './core/repositories/impl/people-mapp
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideHttpClient(),
-    
-    { provide: PEOPLE_RESOURCE_NAME_TOKEN, useValue: 'personas' },
-    { provide: GROUP_RESOURCE_NAME_TOKEN, useValue: 'grupos' },
-    { provide: PEOPLE_API_URL_TOKEN, useValue: 'https://localhost:1337/api/personas' },
-    { provide: GROUP_API_URL_TOKEN, useValue: 'https://localhost:1337/api/grupos' },
+    { provide: BACKEND_TOKEN, useValue: 'strapi' },
+    { provide: PEOPLE_RESOURCE_NAME_TOKEN, useValue: 'people' },
+    { provide: GROUP_RESOURCE_NAME_TOKEN, useValue: 'groups' },
+    { provide: PEOPLE_API_URL_TOKEN, useValue: 'https://localhost:1337/api' },
+    { provide: GROUP_API_URL_TOKEN, useValue: 'https://localhost:1337/api' },
+    { provide: AUTH_SIGN_IN_API_URL_TOKEN, useValue: 'https://localhost:1337/api/auth/local' },
+    { provide: AUTH_SIGN_UP_API_URL_TOKEN, useValue: 'https://localhost:1337/api/auth/local/register' },
+    { provide: AUTH_ME_API_URL_TOKEN, useValue: 'https://localhost:1337/api/users/me' },
     // Registrar los repositorios
-    { 
+    /*{ 
       provide: PEOPLE_REPOSITORY_MAPPING_TOKEN, 
       useClass: PeopleStrapiMappingService//PeopleLocalStorageMapping
     },
     {
       provide: GROUP_REPOSITORY_MAPPING_TOKEN,
       useClass: GroupMappingStrapiServer//GroupMappingJsonServerService
-    },
+    },*/
+    PeopleMappingFactory,
+    GroupsMappingFactory,
+    AuthMappingFactory,
     PeopleRepositoryFactory,
     GroupRepositoryFactory,
     // Registrar otros repositorios según sea necesario

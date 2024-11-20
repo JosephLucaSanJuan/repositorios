@@ -46,7 +46,7 @@ export class GroupsPage implements OnInit {
 
   async openGroupDetail(group:any, index:number){
     this.selectedGroup = group
-    const avatarElements = this.avatars.toArray()
+    /*const avatarElements = this.avatars.toArray()
     const clickedAvatar = avatarElements[index].nativeElement
 
     // Obtener las coordenadas del avatar clicado
@@ -71,7 +71,7 @@ export class GroupsPage implements OnInit {
       .fromTo('transform', 'translate(0, 0) scale(1)', `translate(${window.innerWidth / 2 - avatarRect.left - avatarRect.width / 2}px, ${window.innerHeight / 2 - avatarRect.top - avatarRect.height / 2}px) scale(5)`);
 
     // Iniciar la animación
-    await animation.play();
+    await animation.play();*/
   }
 
   onIonInfinite(ev:InfiniteScrollCustomEvent){

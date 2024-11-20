@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { BaseAuthenticationService } from './core/services/impl/base-authentication.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +8,14 @@ import { Component } from '@angular/core';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor() {}
+  constructor(
+    public authSVC:BaseAuthenticationService,
+    private router:Router
+  ) {}
+  
+  logout(){
+    this.authSVC.signOut().subscribe(_=>{
+      this.router.navigate(['login'])
+    })
+  }
 }

@@ -1,6 +1,9 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>people</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Personas</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -20,7 +23,7 @@
         {{person.name}} {{person.surname}} ({{person.age}} años)
       </ion-label>
       <ion-button (click)="$event.stopPropagation()" [id]="'button-delete-'+person.id" slot="end" color="danger" fill="clear">
-        <ion-icon name="trash-outline"></ion-icon>
+        <ion-icon style="font-size: 1.5em;" name="trash-outline"></ion-icon>
       </ion-button>
       <ion-alert
         [trigger]="'button-delete-'+person.id"
