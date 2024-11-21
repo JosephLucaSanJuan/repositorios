@@ -19,6 +19,7 @@ export abstract class BaseAuthenticationService implements IAuthentication/**/ {
 
     constructor(protected authMapping:IAuthMapping){}
 
+    abstract getCurrent(): Promise<any>
     abstract sigIn(authPayload: any): Observable<any>
     abstract signUp(registerPayload: any): Observable<any>
     abstract signOut(): Observable<any>

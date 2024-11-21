@@ -5,4 +5,5 @@ export interface IAuthentication{
     signUp(registerPayload:any):Observable<any>
     signOut():Observable<any>
     me():Observable<any>
+    getCurrent():Promise<any>
 }

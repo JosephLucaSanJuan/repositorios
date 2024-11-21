@@ -7,10 +7,10 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { AuthMappingFactory, GroupRepositoryFactory, GroupsMappingFactory, PeopleMappingFactory, PeopleRepositoryFactory } from './core/repositories/repository.factory';
+import { AuthMappingFactory, AuthenticationServiceFactory, GroupRepositoryFactory, GroupsMappingFactory, PeopleMappingFactory, PeopleRepositoryFactory } from './core/repositories/repository.factory';
 import { PeopleService } from './core/services/impl/people.service';
 import { AUTH_ME_API_URL_TOKEN, AUTH_SIGN_IN_API_URL_TOKEN, AUTH_SIGN_UP_API_URL_TOKEN, BACKEND_TOKEN, GROUP_API_URL_TOKEN, GROUP_REPOSITORY_MAPPING_TOKEN, GROUP_RESOURCE_NAME_TOKEN, PEOPLE_API_URL_TOKEN, PEOPLE_REPOSITORY_MAPPING_TOKEN, PEOPLE_RESOURCE_NAME_TOKEN } from './core/repositories/repository.tokens';
-import { provideHttpClient } from '@angular/common/http';
+import { HttpClient, HttpClientModule, provideHttpClient } from '@angular/common/http';
 import { PeopleHttpMapping } from './core/repositories/impl/people-mapping-http.service';
 import { PeopleLocalStorageMapping } from './core/repositories/impl/people-mapping-local-storage.service';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -20,9 +20,26 @@ import { PersonModalComponent } from './components/person-modal/person-modal.com
 import { GroupSelectableComponent } from './components/group-selectable/group-selectable.component';
 import { GroupMappingStrapiServer } from './core/repositories/impl/group-mapping-strapi-server.service';
 import { PeopleStrapiMappingService } from './core/repositories/impl/people-mapping-strapi.service';
+import { provideLottieOptions } from 'ngx-lottie';
+import player from 'lottie-web';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
+export function createTranslateLoader(http:HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json')
+}
+
 @NgModule({
   declarations: [AppComponent, PersonModalComponent, GroupSelectableComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, ReactiveFormsModule],
+  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, ReactiveFormsModule, HttpClientModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: createTranslateLoader,
+        deps: [HttpClient]
+      }
+    })
+  ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideHttpClient(),
@@ -57,7 +74,11 @@ import { PeopleStrapiMappingService } from './core/repositories/impl/people-mapp
     {
       provide: 'GroupService',
       useClass: GroupService
-    }
+    },
+    AuthenticationServiceFactory,
+    provideLottieOptions({
+      player: () => player,
+    }),
   ],
   // ... otros proveedores],
   bootstrap: [AppComponent],

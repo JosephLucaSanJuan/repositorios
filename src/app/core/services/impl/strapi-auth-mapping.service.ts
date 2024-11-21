@@ -70,19 +70,22 @@ export class StrapiAuthMappingService implements IAuthMapping {
     signIn(response: StrapiLoginResponse): User {
         return {
             id:response.user.id.toString(),
-            username:response.user.username
+            username:response.user.username,
+            email:response.user.email
         }
     }
     signUp(response: StrapiRegisterResponse): User {
         return {
             id:response.user.id.toString(),
-            username:response.user.username
+            username:response.user.username,
+            email:response.user.email
         }
     }
     me(response: StrapiMeResponse): User {
         return {
             id:response.id.toString(),
-            username:response.username
+            username:response.username,
+            email:response.email
         }
     }
 }

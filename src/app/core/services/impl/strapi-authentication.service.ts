@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@angular/core";
 import { BaseAuthenticationService } from "./base-authentication.service";
-import { Observable, of, tap } from "rxjs";
+import { Observable, filter, of, switchMap, take, tap } from "rxjs";
 import { AUTH_MAPPING_TOKEN, AUTH_ME_API_URL_TOKEN, AUTH_SIGN_IN_API_URL_TOKEN, AUTH_SIGN_UP_API_URL_TOKEN } from "../../repositories/repository.tokens";
 import { IAuthMapping } from "../interfaces/auth-mapping.interface";
 import { HttpClient } from "@angular/common/http";
@@ -74,5 +74,17 @@ export class StrapiAuthenticationService extends BaseAuthenticationService {
         return this.httpClient.get<StrapiRegisterResponse>(
             `${this.meUrl}`,{headers:{Autorization: `Bearer ${this.jwt_token}`}}
         );
+    }
+
+    override getCurrent(): Promise<any> {
+        return new Promise((resolve) => {
+            this._ready.pipe(
+                filter(ready => ready === true),
+                take(1),
+                switchMap(() => this._users.pipe(take(1)))
+            ).subscribe(user => {
+                resolve(user)
+            })
+        });
     }
 }
