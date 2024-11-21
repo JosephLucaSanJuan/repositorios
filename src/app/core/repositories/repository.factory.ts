@@ -125,7 +125,7 @@ export const PeopleMappingFactory: FactoryProvider = {
         break;
     }
   },
-  deps: [BACKEND_TOKEN, PEOPLE_REPOSITORY_MAPPING_TOKEN]
+  deps: [BACKEND_TOKEN]
 };
 
 export const GroupsMappingFactory: FactoryProvider = {
@@ -153,7 +153,7 @@ export const GroupsMappingFactory: FactoryProvider = {
         break;
     }
   },
-  deps: [BACKEND_TOKEN, GROUP_REPOSITORY_MAPPING_TOKEN]
+  deps: [BACKEND_TOKEN]
 };
 
 export const AuthMappingFactory: FactoryProvider = {
@@ -170,7 +170,7 @@ export const AuthMappingFactory: FactoryProvider = {
         break;
     }
   },
-  deps: [BACKEND_TOKEN, AUTH_MAPPING_TOKEN]
+  deps: [BACKEND_TOKEN]
 };
 
 export const AuthenticationServiceFactory: FactoryProvider = {
