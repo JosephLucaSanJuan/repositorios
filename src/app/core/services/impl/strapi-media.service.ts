@@ -33,67 +33,67 @@ export interface StrapiMediaData {
 }
 
 export interface Formats {
-  large: Large
-  small: Small
-  medium: Medium
-  thumbnail: Thumbnail
+    large: Large
+    small: Small
+    medium: Medium
+    thumbnail: Thumbnail
 }
 
 export interface Large {
-  ext: string
-  url: string
-  hash: string
-  mime: string
-  name: string
-  path: any
-  size: number
-  width: number
-  height: number
-  provider_metadata: ProviderMetadata
+    ext: string
+    url: string
+    hash: string
+    mime: string
+    name: string
+    path: any
+    size: number
+    width: number
+    height: number
+    provider_metadata: ProviderMetadata
 }
 
 export interface Small {
-  ext: string
-  url: string
-  hash: string
-  mime: string
-  name: string
-  path: any
-  size: number
-  width: number
-  height: number
-  provider_metadata: ProviderMetadata
+    ext: string
+    url: string
+    hash: string
+    mime: string
+    name: string
+    path: any
+    size: number
+    width: number
+    height: number
+    provider_metadata: ProviderMetadata
 }
 
 export interface Medium {
-  ext: string
-  url: string
-  hash: string
-  mime: string
-  name: string
-  path: any
-  size: number
-  width: number
-  height: number
-  provider_metadata: ProviderMetadata
+    ext: string
+    url: string
+    hash: string
+    mime: string
+    name: string
+    path: any
+    size: number
+    width: number
+    height: number
+    provider_metadata: ProviderMetadata
 }
 
 export interface Thumbnail {
-  ext: string
-  url: string
-  hash: string
-  mime: string
-  name: string
-  path: any
-  size: number
-  width: number
-  height: number
-  provider_metadata: ProviderMetadata
+    ext: string
+    url: string
+    hash: string
+    mime: string
+    name: string
+    path: any
+    size: number
+    width: number
+    height: number
+    provider_metadata: ProviderMetadata
 }
 
 export interface ProviderMetadata {
-  public_id: string
-  resource_type: string
+    public_id: string
+    resource_type: string
 }
 
 export class StrapiMediaService extends BaseMediaService{
