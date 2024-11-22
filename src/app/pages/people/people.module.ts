@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { PeoplePageRoutingModule } from './people-routing.module';
 
 import { PeoplePage } from './people.page';
+import { TranslateModule } from '@ngx-translate/core';
 //import { IonicSelectableModule } from 'ionic-selectable';
 
 @NgModule({
@@ -15,6 +16,7 @@ import { PeoplePage } from './people.page';
     FormsModule,
     IonicModule,
     //IonicSelectableModule,
+    TranslateModule,
     PeoplePageRoutingModule
   ],
   declarations: [PeoplePage]

@@ -13,7 +13,7 @@ export class LanguageService {
         translate.setDefaultLang('es')
 
         const browserLang = translate.getBrowserLang()
-        translate.use(browserLang?.match(/es/en) ? browserLang:'es')
+        translate.use(browserLang?.match(/es|en/) ? browserLang:'es')
 
         const storedLang = this.getStoredLanguage()
         this.changeLanguage(storedLang)

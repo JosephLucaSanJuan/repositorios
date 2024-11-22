@@ -17,6 +17,9 @@ import { PeopleHttpMapping } from './impl/people-mapping-http.service';
 import { BaseAuthenticationService } from '../services/impl/base-authentication.service';
 import { StrapiAuthenticationService } from '../services/impl/strapi-authentication.service';
 import { IAuthMapping } from '../services/interfaces/auth-mapping.interface';
+import { BaseMediaService } from '../services/impl/base-media.service';
+import { IStrapiAuthentication } from '../services/interfaces/strapi-authentication.interface';
+import { StrapiMediaService } from '../services/impl/strapi-media.service';
 // Importa otros modelos según sea necesario
 
 export function createHttpRepository<T extends Model>(http: HttpClient, apiUrl: string, resource:string, mapping:IBaseMapping<T>): IBaseRepository<T> {
@@ -71,7 +74,6 @@ export const GroupRepositoryFactory: FactoryProvider = {
   provide: GROUP_REPOSITORY_TOKEN,
   useFactory: (backend: string, http: HttpClient, apiURL:string, resource:string, mapping:IBaseMapping<Group>) => {
     // Aquí puedes decidir qué implementación usar
-    // Por ejemplo, usar Firebase:
     switch (backend) {
       case 'http':
         return createHttpRepository<Group>(http, apiURL, resource, mapping);
@@ -102,7 +104,6 @@ export const GroupRepositoryFactory: FactoryProvider = {
 export const PeopleMappingFactory: FactoryProvider = {
   provide: PEOPLE_REPOSITORY_MAPPING_TOKEN,
   useFactory: (backend: string) => {
-    // Aquí puedes decidir qué implementación usar
     switch (backend) {
       case 'http':
         throw new Error("BACKEND NOT IMPLEMENTED");
@@ -159,7 +160,6 @@ export const GroupsMappingFactory: FactoryProvider = {
 export const AuthMappingFactory: FactoryProvider = {
   provide: AUTH_MAPPING_TOKEN,
   useFactory: (backend: string, signIn:string, signUp:string, me:string, mapping:IAuthMapping, httpClient:HttpClient) => {
-    // Aquí puedes decidir qué implementación usar
     switch (backend) {
       case 'strapi':
         return new StrapiAuthenticationService(signIn, signUp, me, mapping, httpClient);
@@ -176,10 +176,25 @@ export const AuthMappingFactory: FactoryProvider = {
 export const AuthenticationServiceFactory: FactoryProvider = {
   provide: BaseAuthenticationService,
   useFactory: (backend: string, signIn:string, signUp:string, me:string, mapping:IAuthMapping, httpClient:HttpClient) => {
-    // Aquí puedes decidir qué implementación usar
     switch (backend) {
       case 'strapi':
         return new StrapiAuthenticationService(signIn, signUp, me, mapping, httpClient);
+        break;
+    
+      default:
+        throw new Error("BACKEND NOT IMPLEMENTED")
+        break;
+    }
+  },
+  deps: [BACKEND_TOKEN, AUTH_SIGN_IN_API_URL_TOKEN, AUTH_SIGN_UP_API_URL_TOKEN, AUTH_ME_API_URL_TOKEN, AUTH_MAPPING_TOKEN, HttpClient]
+};
+
+export const MediaServiceFactory: FactoryProvider = {
+  provide: BaseMediaService,
+  useFactory: (backend: string, upload:string, auth:IStrapiAuthentication, httpClient:HttpClient) => {
+    switch (backend) {
+      case 'strapi':
+        return new StrapiMediaService(upload, auth, httpClient);
         break;
     
       default:

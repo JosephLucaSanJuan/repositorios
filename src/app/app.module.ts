@@ -7,7 +7,7 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { AuthMappingFactory, AuthenticationServiceFactory, GroupRepositoryFactory, GroupsMappingFactory, PeopleMappingFactory, PeopleRepositoryFactory } from './core/repositories/repository.factory';
+import { AuthMappingFactory, AuthenticationServiceFactory, GroupRepositoryFactory, GroupsMappingFactory, MediaServiceFactory, PeopleMappingFactory, PeopleRepositoryFactory } from './core/repositories/repository.factory';
 import { PeopleService } from './core/services/impl/people.service';
 import { AUTH_ME_API_URL_TOKEN, AUTH_SIGN_IN_API_URL_TOKEN, AUTH_SIGN_UP_API_URL_TOKEN, BACKEND_TOKEN, GROUP_API_URL_TOKEN, GROUP_REPOSITORY_MAPPING_TOKEN, GROUP_RESOURCE_NAME_TOKEN, PEOPLE_API_URL_TOKEN, PEOPLE_REPOSITORY_MAPPING_TOKEN, PEOPLE_RESOURCE_NAME_TOKEN } from './core/repositories/repository.tokens';
 import { HttpClient, HttpClientModule, provideHttpClient } from '@angular/common/http';
@@ -79,6 +79,7 @@ export function createTranslateLoader(http:HttpClient) {
     provideLottieOptions({
       player: () => player,
     }),
+    MediaServiceFactory
   ],
   // ... otros proveedores],
   bootstrap: [AppComponent],

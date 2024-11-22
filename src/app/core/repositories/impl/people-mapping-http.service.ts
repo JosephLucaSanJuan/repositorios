@@ -16,13 +16,13 @@ export interface PersonRaw {
     providedIn: 'root'
 })
 export class PeopleHttpMapping implements IBaseMapping<Person> {
-    toGenderMapping:any = {
+    fromGenderMapping:any = {
         male:'Masculino',
         female:'Femenino',
         other:'Otros'
     }
 
-    fromGenderMapping:any = {
+    toGenderMapping:any = {
         Masculino:'male',
         Femenino:'female',
         Otros:'other'
@@ -57,7 +57,7 @@ export class PeopleHttpMapping implements IBaseMapping<Person> {
                     toReturn['email']=data[key]
                     break;
                 case 'gender':
-                    toReturn['genero']=data[key]
+                    toReturn['genero']=data[key]=='Masculino'?'male':data[key]=='Femenino'?'female':'other'
                     break;
                 case 'groupID':
                     toReturn['grupoID']=data[key]
@@ -84,20 +84,23 @@ export class PeopleHttpMapping implements IBaseMapping<Person> {
             email:(data as any)["email"]??'',
             groupID:(data as any)["groupID"]??'',
             gender:this.fromGenderMapping[data.genero],
-            picture:{
+            picture:(data as any)["picture"]?{
+                url:(data as any)["picture"].url, 
                 large:(data as any)["picture"].large, 
+                medium:(data as any)["picture"].medium,
+                small:(data as any)["picture"].small,
                 thumbnail:(data as any)["picture"].thumbnail
-            }};
+            }:undefined};
     }
 
     getAdded(data: PersonRaw):Person {
-        throw new Error("Method not implemented.");
+        return this.getOne(data);
     }
     getUpdated(data: PersonRaw):Person {
-        throw new Error("Method not implemented.");
+        return this.getOne(data);
     }
     getDeleted(data: PersonRaw):Person {
-        throw new Error("Method not implemented.");
+        return this.getOne(data);
     }
 }
   

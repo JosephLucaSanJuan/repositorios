@@ -2,17 +2,46 @@ import { Injectable } from "@angular/core";
 import { IBaseMapping } from "../intefaces/base-mapping.interface";
 import { Person } from "../../models/person.model";
 import { Paginated } from "../../models/paginated.model";
+import { StrapiMedia } from "../../services/impl/strapi-media.service";
+
+interface MediaRaw{
+    data: StrapiMedia
+}
+interface UserRaw{
+    data: UserData
+}
+
+interface UserData{
+    id: number
+    attributes: UserAttributes
+}
+
+interface UserAttributes {
+    username: string
+    email: string
+    provider: string
+    confirmed: boolean
+    blocked: boolean
+    createdAt: string
+    updatedAt: string
+}
 
 export interface GroupRaw{
-    data:Data<GroupAttributes>
+    data:GroupData,
+    meta:Meta
 }
 
 export interface GroupAttributes {
     name: string
 }
 
+export interface GroupData {
+    id:number
+    attributes:GroupAttributes
+}
+
 export interface PersonRaw{
-    data:Data<PersonAttributes>,
+    data:Data,
     meta:Meta
 }
 
@@ -25,9 +54,11 @@ export interface PersonAttributes {
     updatedAt?:string
     publishedAt?:string
     group: GroupRaw | number | null
+    user: UserRaw | number | null
+    picture: MediaRaw | number | null
 }
 
-export interface Data<T> {
+export interface Data {
     id:number
     attributes:PersonAttributes
 }
@@ -42,31 +73,43 @@ export interface Meta{}
     providedIn: 'root'
 })
 export class PeopleStrapiMappingService implements IBaseMapping<Person> {
-    toGenderMapping:any = {
+    fromGenderMapping:any = {
         male:'Masculino',
         female:'Femenino',
         other:'Otros'
     }
 
-    fromGenderMapping:any = {
+    toGenderMapping:any = {
         Masculino:'male',
         Femenino:'female',
         Otros:'other'
     }
 
-    getPaginated(page: number, pageSize: number, pages: number, data: Data<PersonRaw>[]): Paginated<Person> {
-        return {page:page, pageSize:pageSize, pages:pages, data:data.map<Person>((d:Data<PersonRaw>)=>{
+    getPaginated(page: number, pageSize: number, pages: number, data: Data[]): Paginated<Person> {
+        return {page:page, pageSize:pageSize, pages:pages, data:data.map<Person>((d:Data)=>{
             return this.getOne(d);
         })};
     }
 
-    getOne(data: Data<Person>): Person {
+    getOne(data: Data | PersonRaw): Person {
+        const isPersonRaw = (data: Data | PersonRaw): data is PersonRaw => 'meta' in data
+
+        const id = isPersonRaw(data) ? data.data.id : data.id
+        const attributes = isPersonRaw(data) ? data.data.attributes : data.attributes
         return {
-            id:data.id.toString(), 
-            name:data.attributes.name, 
-            surname:data.attributes.surname, 
-            gender:this.fromGenderMapping[data.attributes.gender],
-            groupID:typeof data.attributes.group === 'object'?data.attributes.group?.data.id.toString():undefined,
+            id:id.toString(), 
+            name:attributes.name, 
+            surname:attributes.surname, 
+            gender:this.fromGenderMapping[attributes.gender],
+            groupID:typeof attributes.group === 'object'?attributes.group?.data?.id.toString():undefined,
+            userID:typeof attributes.user === 'object'?attributes.user?.data?.id.toString():undefined,
+            picture:typeof attributes.picture === 'object'? {
+                url:attributes.picture?.data?.attributes.url,
+                large:attributes.picture?.data?.attributes?.formats?.large?.url || attributes.picture?.data?.attributes.url,
+                medium:attributes.picture?.data?.attributes?.formats?.medium?.url || attributes.picture?.data?.attributes.url,
+                small:attributes.picture?.data?.attributes?.formats?.small?.url || attributes.picture?.data?.attributes.url,
+                thumbnail:attributes.picture?.data?.attributes?.formats?.thumbnail?.url || attributes.picture?.data?.attributes.url,
+            }:undefined
         };
     }
 
@@ -88,38 +131,39 @@ export class PeopleStrapiMappingService implements IBaseMapping<Person> {
                 name:data.name, 
                 surname:data.surname,
                 gender:this.toGenderMapping[data.gender],
-                group:Number(data.groupID)??'',
+                group:data.groupID?Number(data.groupID):null,
+                user:data.userID?Number(data.userID):null,
+                picture:data.picture?Number(data.picture):null
             }
         };
     }
 
-    setUpdate(data: Person): PersonData {
-        let toReturn:PersonData = {
-            attributes: {
-                name:"", 
-                surname:"",
-                gender:"",
-                group:null,
-            }
-        }
+    setUpdate(data: Partial<Person>): PersonData {
+        const toReturn:Partial<PersonAttributes> = {}
         Object.keys(data).forEach(key=>{
             switch (key) {
                 case 'name':
-                    toReturn.attributes['name']=data[key]
+                    toReturn.name=data[key]
                     break;
                 case 'surname':
-                    toReturn.attributes['surname']=data[key]
+                    toReturn.surname=data[key]
                     break;
                 case 'gender':
-                    toReturn.attributes['gender']=data[key]=='Masculino'?'male':data[key]=='Femenino'?'female':'other'
+                    toReturn.gender=data[key]=='Masculino'?'male':data[key]=='Femenino'?'female':'other'
                     break;
                 case 'groupID':
-                    toReturn.attributes['group']=Number(data[key])??''
+                    toReturn.group= data[key] ? Number(data[key]):null
+                    break;
+                case 'userID':
+                    toReturn.user= data[key] ? Number(data[key]):null
+                    break;
+                case 'picture':
+                    toReturn.picture= data[key] ? Number(data[key]):null
                     break;
                 default:
                     break;
             }
         })
-        return toReturn;
+        return { attributes:toReturn as PersonAttributes };
     }
 }

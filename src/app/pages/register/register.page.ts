@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from 'src/app/core/models/user.model';
 import { BaseAuthenticationService } from 'src/app/core/services/impl/base-authentication.service';
+import { PeopleService } from 'src/app/core/services/impl/people.service';
 import { passwordValidator } from 'src/app/core/utils/validators';
 
 @Component({
@@ -25,6 +26,7 @@ export class RegisterPage implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
+    private peoplSVC: PeopleService,
     private authSVC: BaseAuthenticationService
   ) { 
     this.userRegister = this.fb.group({
@@ -73,9 +75,15 @@ export class RegisterPage implements OnInit {
   onSubmit(){
     if (this.userRegister.valid) {
       this.authSVC.sigIn(this.userRegister.value).subscribe({
-        next:resp=>{
-          const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home'
-          this.router.navigateByUrl(returnUrl)
+        next: (resp:User) => {
+          const userData = {...this.userRegister.value, userID: resp.id.toString()}
+          this.peoplSVC.add(userData).subscribe({
+            next:resp=>{
+              const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home'
+              this.router.navigateByUrl(returnUrl)
+            },
+            error: err => {}
+          })
         },
         error:err=>{
           console.log(err)

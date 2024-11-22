@@ -8,11 +8,11 @@ export interface Person extends Model{
     email?:string,
     gender:string,
     picture?:{
-        url:string// | undefined,
-        large:string,
-        medium:string,
-        small:string,
-        thumbnail:string
+        url:string | undefined,
+        large:string | undefined,
+        medium:string | undefined,
+        small:string | undefined,
+        thumbnail:string | undefined
     },
     groupID?:string
     userID?:string

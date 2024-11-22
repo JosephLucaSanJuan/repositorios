@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { AnimationController, InfiniteScrollCustomEvent, ModalController } from '@ionic/angular';
+import { AlertController, AnimationController, InfiniteScrollCustomEvent, ModalController, Platform } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, Subscription, lastValueFrom } from 'rxjs';
 import { PersonModalComponent } from 'src/app/components/person-modal/person-modal.component';
 import { Group } from 'src/app/core/models/group.model';
@@ -44,13 +45,19 @@ export class PeoplePage implements OnInit {
       role: 'yes'
     }
   ]
+  isWeb:boolean = false
 
   constructor(
     private animationCtrl: AnimationController,
     private modalCtrl: ModalController,
     private groupSVC: GroupService,
+    private translate: TranslateService,
+    private alertCtrl: AlertController,
+    private platform: Platform,
     private peopleSVC: PeopleService
-  ) { }
+  ) { 
+    this.isWeb = this.platform.is('desktop')
+  }
 
   ngOnInit() {
     this.refresh()
@@ -141,15 +148,30 @@ export class PeoplePage implements OnInit {
     await this.presentModalPerson('new')
   }
 
-  onDeletePerson(event:CustomEvent, person:Person){
-    if (event.detail.role == 'yes'){
-      this.peopleSVC.delete(person.id).subscribe({
-        next:response=>{
-          this.refresh()
+  async onDeletePerson(/*event:CustomEvent, */person:Person){
+    const alert = await this.alertCtrl.create({
+      header: await this.translate.get('PEOPLE.MESSAGES.DELETE_CONFIRM').toPromise(),
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
         },
-        error:err=>{}
-      })
-    }
+        {
+          text: 'OK',
+          role: 'yes',
+          handler: () => {
+            this.peopleSVC.delete(person.id).subscribe({
+              next:response=>{
+                this.refresh()
+              },
+              error:err=>{}
+            })
+          }
+        }
+      ]
+    })
+    //if (event.detail.role == 'yes'){}
+    await alert.present()
   }
 
 }

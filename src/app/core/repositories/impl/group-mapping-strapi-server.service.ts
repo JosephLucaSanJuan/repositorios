@@ -64,10 +64,14 @@ export class GroupMappingStrapiServer implements IBaseMapping<Group>{
         })};
     }
 
-    getOne(data: Data): Group {
+    getOne(data: Data | GroupRaw): Group {
+        const isGroupRaw = (data: Data | GroupRaw): data is GroupRaw => 'meta' in data
+
+        const id = isGroupRaw(data) ? data.data.id : data.id
+        const attributes = isGroupRaw(data) ? data.data.attributes : data.attributes
         return {
-            id:data.id.toString(),
-            name:data.attributes.name
+            id:id.toString(),
+            name:attributes.name
         };
     }
 
